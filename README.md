@@ -6,6 +6,17 @@
 
 Nail Braille is an innovative project aimed at revolutionizing the way people learn and interact with Braille. This project uses affordable components and 3D-printed parts to create a unique and effective learning tool.
 
+### Overview
+
+- [Requirements](#requirements)
+  - [Hardware](#hardware)
+  - [Software](#software)
+- [Setup](#setup)
+  - [Arduino](#arduino)
+  - [Web Interface](#web-interface)
+    - [Wiring](#wiring)
+- [Installation](#installation)
+
 ### Requirements
 
 #### Hardware
@@ -28,10 +39,20 @@ Nail Braille is an innovative project aimed at revolutionizing the way people le
 
 ### Setup
 
+#### Arduino
+
+1. Flash your micro controller of choice with the sketch found in `microcontroller/Braille`
+
+#### Web Interface
+
 1. 3D print the Braille disks and base found in the `/models` directory.
-2. Wire the components according to the diagram (image path to be added later).
+2. Wire the components according to the diagram below.
 3. Place the disks on the motors and the motors in the base.
 4. Connect the motors to their respective motor controllers.
+
+##### Wiring
+
+![Wiring Diagram](assets/Wiring.png)
 
 ### Installation
 
