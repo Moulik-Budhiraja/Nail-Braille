@@ -1,0 +1,33 @@
+nav {
+  background-color: #1159ab;
+}
+
+nav {
+  display: flex;
+  gap: 5rem;
+  color: white;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+nav ul {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  align-items: center;
+  margin: 0;
+  line-height: 1;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+nav a:is(:hover, :focus) {
+  color: #f2f2f2;
+  text-decoration: underline;
+  font-weight: bold;
+}

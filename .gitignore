@@ -1,0 +1,6 @@
+.vscode
+__pycache__
+ArduinoOutput
+proto
+.env
+node_modules
