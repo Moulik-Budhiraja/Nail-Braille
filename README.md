@@ -39,9 +39,18 @@ Nail Braille is an innovative project aimed at revolutionizing the way people le
 
 ### Setup
 
+#### Wiring
+
+Wire the components as shown below.
+
+![Wiring Diagram](assets/Wiring.png)
+
+
 #### Arduino
 
-1. Flash your micro controller of choice with the sketch found in `microcontroller/Braille`
+1. Flash your microcontroller of choice with the sketch found in `microcontroller/Braille`
+
+*Note: Your microcontroller must be Arduino compatible*
 
 #### Web Interface
 
@@ -50,9 +59,6 @@ Nail Braille is an innovative project aimed at revolutionizing the way people le
 3. Place the disks on the motors and the motors in the base.
 4. Connect the motors to their respective motor controllers.
 
-##### Wiring
-
-![Wiring Diagram](assets/Wiring.png)
 
 ### Installation
 
@@ -61,7 +67,7 @@ Nail Braille is an innovative project aimed at revolutionizing the way people le
 git clone https://github.com/Moulik-Budhiraja/Nail-Braille.git
 ```
 
-In different terminal instances:
+In individual terminal instances:
 
 ```bash
 # Install and run the client
