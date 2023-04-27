@@ -58,7 +58,7 @@ Nail Braille is an innovative project aimed at revolutionizing the way people le
 
 ```bash
 # Clone the repository
-git clone <repo-url>
+git clone https://github.com/Moulik-Budhiraja/Nail-Braille.git
 ```
 
 In different terminal instances:
