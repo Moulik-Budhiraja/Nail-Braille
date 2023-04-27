@@ -10,6 +10,22 @@
 #define SafetyButton 34
 #define SafetyLight 14
 
+// Creates an instance
+// Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
+// RIGHT MOTOR
+AccelStepper myStepper1(MotorInterfaceType, 32, 26, 25, 27);  //
+
+// LEFT MOTOR
+AccelStepper myStepper2(MotorInterfaceType, 16, 18, 17, 19);
+
+bool isMotorRunning = false;
+bool isResetPressed = false;
+bool isSafetyPressed = false;
+
+int braille = 0b111111;
+int rightTargetPosition = 0;
+int leftTargetPosition = 0;
+
 int* fromBits(unsigned int n) {
     // Split 6 bit number into 2 3 bit numbers
     static int bits[2];
@@ -42,42 +58,15 @@ int closestPosition(int currentPosition, int targetPosition) {
     return newTargetPosition;
 }
 
-// Creates an instance
-// Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
-// RIGHT MOTOR
-AccelStepper myStepper1(MotorInterfaceType, 32, 26, 25, 27);  //
-
-// LEFT MOTOR
-AccelStepper myStepper2(MotorInterfaceType, 16, 18, 17, 19);
-
-bool isMotorRunning = false;
-bool isResetPressed = false;
-bool isSafetyPressed = false;
-
-int braille = 0b111111;
-int rightTargetPosition = 0;
-int leftTargetPosition = 0;
-
-void setup() {
+void setupStepper(AccelStepper& stepper) {
     // set the maximum speed, acceleration factor,
     // initial speed and the target position
-    myStepper1.setMaxSpeed(500.0);
-    myStepper1.setAcceleration(300.0);
-    myStepper1.setSpeed(0);
-
-    myStepper2.setMaxSpeed(500.0);
-    myStepper2.setAcceleration(300.0);
-    myStepper2.setSpeed(0);
-
-    pinMode(ResetButton, INPUT);
-    pinMode(Relay, OUTPUT);
-    pinMode(SafetyButton, INPUT);
-    pinMode(SafetyLight, OUTPUT);
-
-    Serial.begin(115200);
+    stepper.setMaxSpeed(500.0);
+    stepper.setAcceleration(300.0);
+    stepper.setSpeed(0);
 }
 
-void loop() {
+void handleInput() {
     if (Serial.available()) {
         int inByte = Serial.parseInt();
         Serial.print(inByte, DEC);
@@ -92,7 +81,9 @@ void loop() {
             Serial.println("S");
         }
     }
+}
 
+void handleResetButton() {
     // Detect rising edge of button press
     if (digitalRead(ResetButton) == HIGH && !isResetPressed) {
         isResetPressed = true;
@@ -107,9 +98,10 @@ void loop() {
     if (digitalRead(ResetButton) == LOW && isResetPressed) {
         isResetPressed = false;
     }
+}
 
-    // Detect rising edge of button press
-    if (digitalRead(SafetyButton) == HIGH && !isSafetyPressed) {
+void handleSafetyButton() {
+    if (digitalRead(SafetyButton) == HIGH) {
         isSafetyPressed = true;
         myStepper1.setCurrentPosition(0);
         myStepper2.setCurrentPosition(0);
@@ -119,34 +111,61 @@ void loop() {
 
         digitalWrite(SafetyLight, HIGH);
     }
+}
 
-    // Change direction once the motor reaches target position
-    if (myStepper1.distanceToGo() == 0 ||
-        rightTargetPosition != myStepper1.currentPosition()) {
-        myStepper1.moveTo(rightTargetPosition);
+void setTargetPosition(AccelStepper& stepper, int targetPosition) {
+    if (stepper.distanceToGo() == 0 ||
+        targetPosition != stepper.currentPosition()) {
+        stepper.moveTo(targetPosition);
     }
+}
 
-    if (myStepper2.distanceToGo() == 0 ||
-        leftTargetPosition != myStepper2.currentPosition()) {
-        myStepper2.moveTo(leftTargetPosition);
-    }
+void setup() {
+    setupStepper(myStepper1);
+    setupStepper(myStepper2);
 
-    // If both motors are at target position, stop motors
+    pinMode(ResetButton, INPUT);
+    pinMode(Relay, OUTPUT);
+    pinMode(SafetyButton, INPUT);
+    pinMode(SafetyLight, OUTPUT);
+
+    Serial.begin(115200);
+}
+
+void loop() {
+    handleInput();
+
+    handleResetButton();
+    handleSafetyButton();
+
+    setTargetPosition(myStepper1, rightTargetPosition);
+    setTargetPosition(myStepper2, leftTargetPosition);
+
+    // If both motors are at target position, stop motors, turn off relay, else
+    // if motors are not at target position, turn on relay
     if (myStepper1.distanceToGo() == 0 && myStepper2.distanceToGo() == 0) {
         if (isMotorRunning) {
             Serial.println("S");
         }
         isMotorRunning = false;
-        digitalWrite(Relay, isMotorRunning);
+        // digitalWrite(Relay, isMotorRunning);
+
+        myStepper1.disableOutputs();
+        myStepper2.disableOutputs();
+
     } else if (myStepper1.currentPosition() != rightTargetPosition ||
                myStepper2.currentPosition() != leftTargetPosition) {
         isMotorRunning = true;
 
         if (isSafetyPressed) {
             isMotorRunning = false;
-        }
 
-        digitalWrite(Relay, isMotorRunning);
+            myStepper1.disableOutputs();
+            myStepper2.disableOutputs();
+        } else {
+            myStepper1.enableOutputs();
+            myStepper2.enableOutputs();
+        }
     }
 
     if (isMotorRunning && !isSafetyPressed) {  // Move the motor one step
