@@ -3,20 +3,20 @@
 
 // Define step constant
 #define MotorInterfaceType 4
-#define ResetButton 21
-#define Relay 4
+#define ResetButton 32
+// #define Relay 15
 #define STEPS 2048
-#define INVERT false
+#define INVERT true
 #define SafetyButton 34
-#define SafetyLight 14
+#define SafetyLight 26
 
 // Creates an instance
 // Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
 // RIGHT MOTOR
-AccelStepper myStepper1(MotorInterfaceType, 32, 26, 25, 27);  //
+AccelStepper myStepper1(MotorInterfaceType, 23, 21, 22, 19);  //
 
 // LEFT MOTOR
-AccelStepper myStepper2(MotorInterfaceType, 16, 18, 17, 19);
+AccelStepper myStepper2(MotorInterfaceType, 18, 16, 17, 4);
 
 bool isMotorRunning = false;
 bool isResetPressed = false;
@@ -62,7 +62,7 @@ void setupStepper(AccelStepper& stepper) {
     // set the maximum speed, acceleration factor,
     // initial speed and the target position
     stepper.setMaxSpeed(500.0);
-    stepper.setAcceleration(300.0);
+    stepper.setAcceleration(1000.0);
     stepper.setSpeed(0);
 }
 
@@ -84,6 +84,7 @@ void handleInput() {
 }
 
 void handleResetButton() {
+    // Serial.println(digitalRead(ResetButton));
     // Detect rising edge of button press
     if (digitalRead(ResetButton) == HIGH && !isResetPressed) {
         isResetPressed = true;
@@ -125,7 +126,7 @@ void setup() {
     setupStepper(myStepper2);
 
     pinMode(ResetButton, INPUT);
-    pinMode(Relay, OUTPUT);
+    // pinMode(Relay, OUTPUT);
     pinMode(SafetyButton, INPUT);
     pinMode(SafetyLight, OUTPUT);
 
@@ -136,7 +137,7 @@ void loop() {
     handleInput();
 
     handleResetButton();
-    handleSafetyButton();
+    // handleSafetyButton();
 
     setTargetPosition(myStepper1, rightTargetPosition);
     setTargetPosition(myStepper2, leftTargetPosition);
