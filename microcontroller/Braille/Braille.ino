@@ -6,7 +6,7 @@
 #define ResetButton 32
 // #define Relay 15
 #define STEPS 2048
-#define INVERT true
+#define INVERT false
 #define SafetyButton 34
 #define SafetyLight 26
 

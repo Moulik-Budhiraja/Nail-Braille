@@ -15,7 +15,7 @@ export function CharacterIntroduction() {
         position: letters[letterPos],
       }),
     }).then(() => {
-      msg.text = `This is ${letters[letterPos]}`;
+      msg.text = `This is "${letters[letterPos].toUpperCase()}"`;
       window.speechSynthesis.speak(msg);
 
       if (letterPos < letters.length - 1) {

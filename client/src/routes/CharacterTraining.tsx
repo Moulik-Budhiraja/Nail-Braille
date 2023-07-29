@@ -121,6 +121,9 @@ export function CharacterTraining() {
         letterSkill[currentLetter] -= 0.05 / (1 / attempts);
       }
 
+      msg.text = `Correct!`;
+      window.speechSynthesis.speak(msg);
+
       attempts = 0;
 
       pickLetter();
@@ -134,7 +137,7 @@ export function CharacterTraining() {
       letterSkill[currentLetter] -= 0.05 / (1 / attempts);
       attempts = 0;
 
-      msg.text = `The letter was ${currentLetter}`;
+      msg.text = `The letter was "${currentLetter.toUpperCase()}"`;
       window.speechSynthesis.speak(msg);
 
       pickLetter();
