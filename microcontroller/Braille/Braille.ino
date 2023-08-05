@@ -42,20 +42,16 @@ int* fromBits(unsigned int n) {
 }
 
 int closestPosition(int currentPosition, int targetPosition) {
-    // Target position will always be between -STEPS and STEPS
-    // Return the target position that is closest to the current position
-    // The new target position should be within 1/2 STEPS of the current
-    // position
-    int newTargetPosition = targetPosition;
-    if (currentPosition > targetPosition) {
-        if (currentPosition - targetPosition > STEPS / 2) {
-            newTargetPosition = targetPosition + STEPS;
-        }
-    } else if (targetPosition - currentPosition > STEPS / 2) {
-        newTargetPosition = targetPosition - STEPS;
-    }
+    int originalCurrentPosition = currentPosition;
+    currentPosition %= STEPS;  // Wrap currentPosition around STEPS
+    int distance = (targetPosition - currentPosition + STEPS) % STEPS;
+    int inverse_distance = (currentPosition - targetPosition + STEPS) % STEPS;
 
-    return newTargetPosition;
+    if (distance < inverse_distance) {
+        return originalCurrentPosition + distance;
+    } else {
+        return originalCurrentPosition - inverse_distance;
+    }
 }
 
 void setupStepper(AccelStepper& stepper) {

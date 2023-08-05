@@ -27,9 +27,8 @@ This project earned the Platinum Award for Innovation at the 2023 Canada Wide Sc
 - 1 ESP32 Dev board
 - 2 Buttons
 - 3 LEDs (Red, Green, Blue)
-- 1 100K Ohm resistor
+- 3 100K Ohm resistors
 - 2 10K Ohm resistors
-- 2 1K Ohm resistors
 - 2 28BYJ-48 Stepper motors and their controllers (ULN2003A)
 - Male to male jumper wires
 - 12v DC power supply
